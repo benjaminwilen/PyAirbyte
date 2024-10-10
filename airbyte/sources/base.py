@@ -7,7 +7,6 @@ import json
 import warnings
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Literal
-import logging
 
 import yaml
 from rich import print  # noqa: A004  # Allow shadowing the built-in
@@ -48,7 +47,6 @@ if TYPE_CHECKING:
     from airbyte.shared.state_providers import StateProviderBase
     from airbyte.shared.state_writers import StateWriterBase
 
-kube_logger = logging.getLogger("kubernetes-job")
 
 class Source(ConnectorBase):
     """A class representing a source that can be called."""
@@ -632,7 +630,6 @@ class Source(ConnectorBase):
                 configurations to the connector that otherwise might be rejected by JSON Schema
                 validation rules.
         """
-        kube_logger.log("IT WORKS: IN SOURCE.READ()")
         cache = cache or get_default_cache()
         progress_tracker = ProgressTracker(
             source=self,
