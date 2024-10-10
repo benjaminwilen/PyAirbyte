@@ -253,7 +253,7 @@ class SqlStateBackend(StateBackendBase):
                     if state.table_name == table_prefix + state.stream_name
                 ]
 
-        logger.error(f"STATES: {states}")
+        logger.error(f"STATES: {[state.__dict__ for state in states]}")
         return StaticInputState(
             from_state_messages=[
                 AirbyteStateMessage.model_validate_json(state.state_json) for state in states

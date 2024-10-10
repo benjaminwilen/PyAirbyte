@@ -12,8 +12,6 @@ from functools import cached_property
 from pathlib import Path
 from typing import TYPE_CHECKING, cast, final
 
-import time
-import logging
 
 import pandas as pd
 import sqlalchemy
@@ -310,7 +308,6 @@ class SqlProcessorBase(abc.ABC):
                 # Type.LOG, Type.CONTROL, etc.
                 pass
 
-        time.sleep(300)
         # We've finished processing input data.
         # Finalize all received records and state messages:
         self._write_all_stream_data(
