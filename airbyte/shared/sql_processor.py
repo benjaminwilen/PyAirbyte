@@ -12,6 +12,7 @@ from functools import cached_property
 from pathlib import Path
 from typing import TYPE_CHECKING, cast, final
 
+import time
 import logging
 
 import pandas as pd
@@ -74,7 +75,6 @@ if TYPE_CHECKING:
     from airbyte.shared.state_writers import StateWriterBase
 
 
-kube_logger = logging.getLogger("kubernetes-job")
 
 class RecordDedupeMode(enum.Enum):
     """The deduplication mode to use when writing records."""
@@ -304,16 +304,15 @@ class SqlProcessorBase(abc.ABC):
                         write_strategy=write_strategy,
                         progress_tracker=progress_tracker,
                     )
-                    kube_logger.info("RECEIVED TRACE SUCCEEDED MESSAGE")
 
             else:
                 # Ignore unexpected or unhandled message types:
                 # Type.LOG, Type.CONTROL, etc.
                 pass
 
+        time.sleep(300)
         # We've finished processing input data.
         # Finalize all received records and state messages:
-        kube_logger.info("GOT TO WRITE ALL STREAM DATA")
         self._write_all_stream_data(
             write_strategy=write_strategy,
             progress_tracker=progress_tracker,

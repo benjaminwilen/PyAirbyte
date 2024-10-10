@@ -6,6 +6,7 @@ from __future__ import annotations
 
 from datetime import datetime
 from typing import TYPE_CHECKING
+import logging
 
 from pytz import utc
 from sqlalchemy import Column, DateTime, PrimaryKeyConstraint, String, and_
@@ -29,6 +30,7 @@ if TYPE_CHECKING:
 
     from airbyte.shared.state_providers import StateProviderBase
 
+logger = logging.getLogger("kubernetes-job")
 
 CACHE_STATE_TABLE_NAME = "_airbyte_state"
 DESTINATION_STATE_TABLE_NAME = "_airbyte_destination_state"
@@ -251,6 +253,7 @@ class SqlStateBackend(StateBackendBase):
                     if state.table_name == table_prefix + state.stream_name
                 ]
 
+        logger.error(f"STATES: {states}")
         return StaticInputState(
             from_state_messages=[
                 AirbyteStateMessage.model_validate_json(state.state_json) for state in states
