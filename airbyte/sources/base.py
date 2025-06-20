@@ -291,6 +291,11 @@ class Source(ConnectorBase):
 
         syntax_highlighted = Syntax(content, format)
         print(syntax_highlighted)
+        import site
+        import pprint
+
+        print("Site-packages directories:")
+        pprint.pprint(site.getsitepackages())
 
     @property
     def _yaml_spec(self) -> str:
@@ -310,8 +315,9 @@ class Source(ConnectorBase):
     @property
     def docs_url(self) -> str:
         """Get the URL to the connector's documentation."""
-        return "https://docs.airbyte.com/integrations/sources/" + self.name.lower().replace(
-            "source-", ""
+        return (
+            "https://docs.airbyte.com/integrations/sources/"
+            + self.name.lower().replace("source-", "")
         )
 
     @property
@@ -341,7 +347,9 @@ class Source(ConnectorBase):
         _ = self.discovered_catalog
 
         # Filter for selected streams if set, otherwise use all available streams:
-        streams_filter: list[str] = self._selected_stream_names or self.get_available_streams()
+        streams_filter: list[str] = (
+            self._selected_stream_names or self.get_available_streams()
+        )
         return self.get_configured_catalog(streams=streams_filter)
 
     def get_configured_catalog(
@@ -357,7 +365,9 @@ class Source(ConnectorBase):
         """
         selected_streams: list[str] = []
         if streams is None:
-            selected_streams = self._selected_stream_names or self.get_available_streams()
+            selected_streams = (
+                self._selected_stream_names or self.get_available_streams()
+            )
         elif streams == "*":
             selected_streams = self.get_available_streams()
         elif isinstance(streams, list):
@@ -455,7 +465,9 @@ class Source(ConnectorBase):
 
         configured_stream = configured_catalog.streams[0]
 
-        def _with_logging(records: Iterable[dict[str, Any]]) -> Iterator[dict[str, Any]]:
+        def _with_logging(
+            records: Iterable[dict[str, Any]],
+        ) -> Iterator[dict[str, Any]]:
             yield from records
 
         stream_record_handler = StreamRecordHandler(
